@@ -1,4 +1,4 @@
-setwd("/Users/jose/Desktop/All_R")
+setwd("/Users/jose/Desktop/All_R/RDAP")
 shopper <- read.csv("/Users/jose/Desktop/All_R/DataFiles/online_shoppers_intention.csv")
 
 
@@ -11,3 +11,6 @@ str(shopper_char)
 pairs(shopper_num)
 
 cov(shopper_num)
+
+shopper_target <- data.frame(shopper[,18])
+summary(shopper_target)
