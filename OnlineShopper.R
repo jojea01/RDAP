@@ -14,3 +14,5 @@ cov(shopper_num)
 
 shopper_target <- data.frame(shopper[,18])
 summary(shopper_target)
+
+Test 
