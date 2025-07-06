@@ -115,7 +115,7 @@ apply(importance(BG_Oz, type=2, scale=TRUE), 2, sort, decreasing=TRUE)
 #----K-Means-----
 
 
-shop_scaled <- scale(shop_numeric[T_set,]) 
+shop_scaled <- scale(shop_drop[T_set,]) 
 WSS <- NULL 
 PVE <- NULL 
 
