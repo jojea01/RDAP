@@ -1,7 +1,6 @@
 setwd("/Users/jose/Desktop/All_R/RDAP")
 shopper <- read.csv("/Users/jose/Desktop/All_R/DataFiles/online_shoppers_intention.csv")
 
-
 shopper_num <- shopper[,-c(11,16,17,18)]
 shopper_char <- shopper[,c(11,16,17,18)]
 
@@ -14,13 +13,6 @@ cov(shopper_num)
 
 shopper_target <- data.frame(shopper[,18])
 summary(shopper_target)
-
-
-#--Cleaning 
-
-#Dropping Nas
-shopper_clean <- shopper[complete.cases(shopper), ]
-sum(is.na(shopper_clean))  
 
 #--- Changing nominal variables to numerical-------------
 
@@ -47,6 +39,7 @@ library(corrplot)
 
 cor <-cor(shopper_clean)
 print(cor)
+quartz(width=10, height = 10)
 corrplot(cor, method = "color", addCoef.col = "black")
 
 plot(cor)
@@ -57,6 +50,18 @@ plot(cor)
 shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Duration", "Administrative_Duration", "Informational_Duration"))]
 shop_drop
 
+#-- T-test
+
+#-- Cross-Validation
+set.seed(1115)
+df_n <- nrow(shopper)
+n_V_set <- floor(df_n * 0.3)         
+n_T_set <- df_n - n_V_set
+
+V_set <- sample(x=df_n, size=n_V_set, replace=FALSE)
+T_set <- c(1:df_n)[-V_set]
+
+# Principal Component
 
 #---SVM---- Clean
 
