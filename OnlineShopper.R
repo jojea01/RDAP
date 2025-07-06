@@ -73,4 +73,6 @@ TUNE.kyposis <- tune(svm, Revenue ~., data=shop_drop,
                      kernel="linear",  
                      scale=FALSE,  
                      ranges=list(cost=c(0.01, 1, 10))) 
-adfsf
+
+#---Cluster------
+shop_scaled <- scale(shop_drop[T_set]) 
