@@ -56,13 +56,17 @@ shop_drop
 
 #-- Cross-Validation
 set.seed(1115)
+
 df_n <- nrow(shopper)
-n_V_set <- floor(df_n * 0.3)         
+n_V_set <- floor(df_n * 0.3)
 n_T_set <- df_n - n_V_set
 
-V_set <- sample(x=df_n, size=n_V_set, replace=FALSE)
-T_set <- c(1:df_n)[-V_set]
-T_set
+# Sample row indices for validation set
+val_indices <- sample(x = df_n, size = n_V_set, replace = FALSE)
+
+V_set <- shop_drop[val_indices, ]
+T_set <- shop_drop[-val_indices, ]
+
 
 # Principal Component
 
