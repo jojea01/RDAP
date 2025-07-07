@@ -14,19 +14,19 @@ cov(shopper_num)
 shopper_target <- data.frame(shopper[,18])
 summary(shopper_target)
 
-# target bar graph
-shopper_rev <- sum(shopper_clean[shopper_clean$Revenue == 1,]$Revenue)
-shopper_norev <- sum(shopper_clean[!shopper_clean$Revenue == 1,]$Revenue)
+#----- bar graph------
+shopper_rev <- sum(shopper_clean$Revenue == 1, na.rm = TRUE)
+shopper_rev
+shopper_norev <- sum(shopper_clean$Revenue == 2, na.rm = TRUE)
+shopper_norev
 
-shopper_rev <- c(shopper_rev)
-shopper_norev <- c(shopper_norev)
-
+# --- Create matrix for barplot ---
 counts_matrix <- matrix(c(shopper_rev, shopper_norev), 
                         nrow = 2, 
                         byrow = TRUE)
 
 rownames(counts_matrix) <- c("Revenue", "No Revenue")
-colnames(counts_matrix) <- c("Count")
+colnames(counts_matrix) <- c("Revenue Status")
 
 barplot(counts_matrix,
         main = "Shopper Revenue Status",
@@ -35,7 +35,11 @@ barplot(counts_matrix,
         beside = TRUE)
 legend("topleft",
        legend = c("Revenue", "No Revenue"),
-       fill = c("blue", "red"))
+       fill = c("blue", "red"),
+       xpd = TRUE,
+       bty = "n")
+
+print(counts_matrix)
 
 #--- Changing nominal variables to numerical-------------
 shopper_clean <- shopper
@@ -131,13 +135,13 @@ T_set_30 <- shop_drop[-val_indices_30, ]
 library(tree)
 
 tree_devi <- tree(Revenue ~ ., split="deviance", data=T_set_30, na.action=na.omit)
-head(tree_devi$frame)
+tree_devi$frame
 
 whole_prediction_devi <- predict(tree_devi, newdata = T_set_30, type="vector")
 
 # Cross-validation
 pred_tree_shop_30 <- predict(tree_devi, newdata=V_set_30, type="vector")
-no_na_tree_30 <- na.omit(round(pred_tree_shop)- V_set_30$Revenue)
+no_na_tree_30 <- na.omit(round(pred_tree_shop_30)- V_set_30$Revenue)
 mse_30_tree <- mean((no_na_tree_30)^2)
 
 # tree plot
@@ -164,7 +168,7 @@ mse_20_tree <- mean((no_na_tree_20)^2)
 set.seed(1115)
 
 df_n_10 <- nrow(shop_drop)
-n_V_set_10 <- floor(df_n_10 * 0.3)
+n_V_set_10 <- floor(df_n_10 * 0.10)
 
 # Sample row indices for validation set
 val_indices_10 <- sample(x = df_n_10, size = n_V_set_10, replace = FALSE)
@@ -185,14 +189,14 @@ mse_30_tree
 library(randomForest)
 
 set.seed(1115)
-BG_shop <- randomForest(Revenue ~ ., data=T_set, ntree=500, importance=TRUE, na.action=na.omit)
+BG_shop <- randomForest(Revenue ~ ., data=T_set_30, ntree=500, importance=TRUE, na.action=na.omit)
 
 # Cross-Validation MSE
 pred_BG_shop_30_RF <- predict(BG_shop, newdata=V_set_30)
 no_na_BG_30_RF <- na.omit(round(pred_BG_shop_30_RF) - V_set_30$Revenue)
 mse_30_RF <- mean((no_na_BG_30_RF)^2)
 
-plot(pred_BG_shop, V_set$Revenue, main="Bagging, using a validation set", xlab="y-predicted", ylab="y-observed")
+plot(pred_BG_shop_30_RF, V_set_30$Revenue, main="Bagging, using a validation set", xlab="y-predicted", ylab="y-observed")
   
 varImpPlot(BG_shop, sort=TRUE, scale=TRUE)
 
@@ -214,6 +218,7 @@ mse_10_RF <- mean((no_na_BG_10_RF)^2)
 mse_10_RF
 mse_20_RF
 mse_30_RF
+
 
 
 #----K-Means-----
