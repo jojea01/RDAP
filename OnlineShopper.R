@@ -138,13 +138,20 @@ library(tree)
 
 tree_devi <- tree(Revenue ~ ., split="deviance", data=T_set_30, na.action=na.omit)
 tree_devi$frame
-
-whole_prediction_devi <- predict(tree_devi, newdata = T_set_30, type="vector")
+summary(tree_devi)
 
 # Cross-validation
 pred_tree_shop_30 <- predict(tree_devi, newdata=V_set_30, type="vector")
-no_na_tree_30 <- na.omit(round(pred_tree_shop_30)- V_set_30$Revenue)
+no_na_tree_30 <- na.omit(round(pred_tree_shop_30) - V_set_30$Revenue)
 mse_30_tree <- mean((no_na_tree_30)^2)
+
+#--- r2
+mean_rev <- mean(V_set_30$Revenue)
+tss <- sum((V_set_30$Revenue - mean_rev)^2)
+rss <- sum((V_set_30$Revenue - pred_tree_shop_30)^2)
+# Explained Variance
+r2_tree <- 1 - (rss / tss)
+r2_tree
 
 # confusion matrix
 conf_mat_tree <- table(Predicted = round(pred_tree_shop_30), Actual = V_set_30$Revenue)
@@ -202,6 +209,15 @@ RF_shop
 pred_shop_30_RF <- predict(RF_shop, newdata=V_set_30)
 no_na_30_RF <- na.omit(round(pred_shop_30_RF) - V_set_30$Revenue)
 mse_30_RF <- mean((no_na_30_RF)^2)
+
+# -- r2
+
+# Total sum of squares
+tss <- sum((V_set_30$Revenue - mean_rev)^2)
+rss_rf <- sum(na.omit(V_set_30$Revenue - pred_shop_30_RF)^2)
+# explained variance
+r2_rf <- 1 - (rss_rf / tss)
+r2_rf
 
 # confusion matrix
 conf_mat_RF <- table(Predicted = round(pred_shop_30_RF), Actual = V_set_30$Revenue)
