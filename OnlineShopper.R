@@ -47,11 +47,7 @@ plot(cor)
 
 
 #-- Droping variables Exit Rate ProductRelated_Duration Administrative_Duration Infromational_Duration  ----------
-
-shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Duration", "Administrative_Duration", "Informational_Duration",
-                                                           "TrafficType","OperatingSystems","Browser","Region"))]
-
-shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Duration", "Administrative_Duration", "Informational_Duration", "OperatingSystems", "Browser", "Region", "TrafficType", "Weekend"))]
+shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Duration", "Administrative_Duration", "Informational_Duration","BounceRates"))]
 
 shop_drop
 ########## I dropped theses varraibles becasue either they were correlated with other varraibles or had a relation of less than 5% to the target######
@@ -74,6 +70,13 @@ T_set <- shop_drop[-val_indices, ]
 
 # Principal Component
 
+pca_result <- prcomp(x=shop_drop, scale. = TRUE) 
+biplot(pca_result, scale = 0, main = "PCA Biplot")
+
+shop_drop <- shop_drop[, !(names(shop_drop) %in% c("Weekend", "Browser", "Reigon"))]
+
+
+pca_result$x
 #---SVM---- Clean
 
 library(e1071) 
