@@ -135,6 +135,7 @@ for (k in 1:10) {
   WSS <- c(WSS, KMC.tmp$tot.withinss) 
   PVE <- c(PVE, KMC.tmp$betweenss / KMC.tmp$totss) 
 } 
+
 plot(PVE, ylim=c(0, 1),  
      col="blue", pch=16, cex=1.5, type="b", lwd=1.5, 
      xlab="Number of clusters", ylab="Percent variability explained", 
@@ -147,7 +148,8 @@ axis(side=4, at = c(0, 0.25, 0.5, 0.75, 1),
 mtext(side=4, text="Within-cluster sum of squares", line=3, col="red") 
 legend("topright", legend=c("PVE", "WSS (scaled)"), 
        col=c("blue", "red"), pch=16, lty=1) 
+
 set.seed(7673) 
-KMC <- kmeans(scale(coleman), centers=2) 
+KMC <- kmeans(scale(coleman), centers=8) 
 KMC
 
