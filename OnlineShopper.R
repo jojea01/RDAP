@@ -14,6 +14,29 @@ cov(shopper_num)
 shopper_target <- data.frame(shopper[,18])
 summary(shopper_target)
 
+# target bar graph
+shopper_rev <- sum(shopper_clean[shopper_clean$Revenue == 1,]$Revenue)
+shopper_norev <- sum(shopper_clean[!shopper_clean$Revenue == 1,]$Revenue)
+
+shopper_rev <- c(shopper_rev)
+shopper_norev <- c(shopper_norev)
+
+counts_matrix <- matrix(c(shopper_rev, shopper_norev), 
+                        nrow = 2, 
+                        byrow = TRUE)
+
+rownames(counts_matrix) <- c("Revenue", "No Revenue")
+colnames(counts_matrix) <- c("Count")
+
+barplot(counts_matrix,
+        main = "Shopper Revenue Status",
+        ylab = "Count",
+        col = c("blue", "red"),
+        beside = TRUE)
+legend("topleft",
+       legend = c("Revenue", "No Revenue"),
+       fill = c("blue", "red"))
+
 #--- Changing nominal variables to numerical-------------
 shopper_clean <- shopper
 
