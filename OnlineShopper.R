@@ -109,7 +109,6 @@ T_set_30 <- shop_drop[-val_indices_30, ]
 pca_result <- prcomp(x=shop_drop, scale. = TRUE) 
 biplot(pca_result, scale = 0, main = "PCA Biplot")
 
-
 pca_result$x
 #---SVM---- Clean
 
@@ -278,4 +277,83 @@ legend("topright", legend=c("PVE", "WSS (scaled)"),
 set.seed(7673) 
 KMC <- kmeans(scale(coleman), centers=8) 
 KMC
+
+
+
+#----- Cole
+
+
+
+shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Duration", "Administrative_Duration", "Informational_Duration","BounceRates"))]
+shop_drop
+
+
+#---SVM---- Clean
+
+drop 
+library(e1071) 
+library(rpart)
+#--Crossvalidation
+
+set.seed(1115)
+df_n <- nrow(shopper)
+n_V_set <- floor(df_n * 0.3)         
+n_T_set <- df_n - n_V_set
+
+V_set <- sample(x=df_n, size=n_V_set, replace=FALSE)
+T_set <- c(1:df_n)[-V_set]
+
+shop_drop <- shop_drop[, !(names(shop_drop) %in% c("Weekend", "Browser","TrafficType", "Reigon"))]
+
+#----K-Means-----
+
+shop_drop <- shop_drop[complete.cases(shop_drop), ]
+sum(is.na(shop_drop))  
+
+shop_scaled <- scale(shop_drop[T_set,]) 
+
+WSS <- NULL 
+PVE <- NULL 
+
+for (k in 1:10) { 
+  KMC.tmp <- kmeans(scale(shop_drop), centers = k, nstart = 25) 
+  WSS <- c(WSS, KMC.tmp$tot.withinss) 
+  PVE <- c(PVE, KMC.tmp$betweenss / KMC.tmp$totss) 
+} 
+
+dev.new(height=800, width=800)
+
+plot(PVE, ylim=c(0, 1),  
+     col="blue", pch=16, cex=1.5, type="b", lwd=1.5, 
+     xlab="Number of clusters", ylab="Percent variability explained", 
+     col.axis="blue", col.lab="blue") 
+points(WSS / max(WSS), col="red", pch=16, cex=1.5, type="b", lwd=1.5) 
+axis(side=4, at = c(0, 0.25, 0.5, 0.75, 1), 
+     labels = round(seq(0, max(WSS), length.out = 5)), 
+     col.axis="red", col.ticks="red") 
+
+mtext(side=4, text="Within-cluster sum of squares", line=3, col="red") 
+legend("topright", legend=c("PVE", "WSS (scaled)"), 
+       col=c("blue", "red"), pch=16, lty=1) 
+
+set.seed(7673) 
+KMC <- kmeans(scale(shop_drop), centers=8) 
+KMC
+table(KMC$cluster)
+
+
+pairs(scale(shop_drop), pch=16, cex=0.8, gap=0, xaxt="n", yaxt="n",
+      col=rainbow(8)[KMC$cluster])
+
+#--PCA--
+
+pca_result <- prcomp(x=shop_drop, scale. = TRUE) 
+biplot(pca_result, scale = 0, main = "PCA Biplot")
+
+pca_result$x
+
+summary(pca_result)
+
+pca_result$rotation
+
 
