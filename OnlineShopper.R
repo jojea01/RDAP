@@ -51,21 +51,28 @@ shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Durat
 
 shop_drop
 ########## I dropped theses varraibles becasue either they were correlated with other varraibles or had a relation of less than 5% to the target######
-#-- T-test
 
+#-- anova test
+
+shop_fit <- lm(Revenue ~ ., data=shopper_clean)
+summary(shop_fit)
+anova(shop_fit)
+
+#-- Droping variables from anova ----------
+
+shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("Browser", "Region", "TrafficType", "Weekend"))]
 
 #-- Cross-Validation
 set.seed(1115)
 
-df_n <- nrow(shopper)
-n_V_set <- floor(df_n * 0.3)
-n_T_set <- df_n - n_V_set
+df_n <- nrow(shop_drop)
+n_V_set_30 <- floor(df_n * 0.3)
 
 # Sample row indices for validation set
-val_indices <- sample(x = df_n, size = n_V_set, replace = FALSE)
+val_indices_30 <- sample(x = df_n, size = n_V_set_30, replace = FALSE)
 
-V_set <- shop_drop[val_indices, ]
-T_set <- shop_drop[-val_indices, ]
+V_set_30 <- shop_drop[val_indices_30, ]
+T_set_30 <- shop_drop[-val_indices_30, ]
 
 
 # Principal Component
