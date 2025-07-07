@@ -80,8 +80,6 @@ T_set_30 <- shop_drop[-val_indices_30, ]
 pca_result <- prcomp(x=shop_drop, scale. = TRUE) 
 biplot(pca_result, scale = 0, main = "PCA Biplot")
 
-shop_drop <- shop_drop[, !(names(shop_drop) %in% c("Weekend", "Browser", "Reigon"))]
-
 
 pca_result$x
 #---SVM---- Clean
