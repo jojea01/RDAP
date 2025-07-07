@@ -50,6 +50,9 @@ plot(cor)
 
 shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Duration", "Administrative_Duration", "Informational_Duration",
                                                            "TrafficType","OperatingSystems","Browser","Region"))]
+
+shop_drop <- shopper_clean[, !(names(shopper_clean) %in% c("ProductRelated_Duration", "Administrative_Duration", "Informational_Duration", "OperatingSystems", "Browser", "Region", "TrafficType", "Weekend"))]
+
 shop_drop
 ########## I dropped theses varraibles becasue either they were correlated with other varraibles or had a relation of less than 5% to the target######
 #-- T-test
